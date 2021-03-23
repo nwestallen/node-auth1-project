@@ -44,12 +44,14 @@ function checkUsernameFree(req, res, next) {
   }
 */
 function checkUsernameExists(req, res, next) {
-  const { username } = req.body;
-  if(Users.findBy(username)) {
-    next();
-  } else {
-    res.status(401).json( { message: 'Invalid credentials' });
-  }
+  Users.findBy({ username: req.body.username })
+  .then(user => {
+    if (!user) {
+      res.status(401).json({ message: "Invalid credentials" });
+    } else {
+      next();
+    }
+  });
 }
 
 /*
